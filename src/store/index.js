@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import tasks from './store-tasks'
 import eosaccount from './eosaccount'
 
 Vue.use(Vuex)
@@ -9,7 +8,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      tasks, eosaccount
+      eosaccount
     },
 
     // enable strict mode (adds overhead!)

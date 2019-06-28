@@ -25,9 +25,7 @@ let eos = {}
 
 const mutations = {
     update(state, payload) {
-        console.log('update: ', payload)
         Object.assign(state, payload)
-        console.log("new state: ", state)
     },    
     updateBalance(state, payload) {
         Object.assign(state.balance, payload)    
@@ -36,8 +34,7 @@ const mutations = {
 
 const actions = {
     login({ commit }) {
-        console.log("login")
-        scatter.ScatterJS.connect('EOSPM', {network}).then(connected => {
+        scatter.ScatterJS.connect('ProjectX', {network}).then(connected => {
             if(!connected) return console.error('no scatter')
             const eos1 = scatter.ScatterJS.eos(network, Api, {rpc, beta3:true})
             eos = eos1
