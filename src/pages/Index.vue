@@ -98,6 +98,28 @@
             </div>
           </q-timeline-entry>
         </q-timeline>
+
+        <div>
+          <h5>Выпуск токенов:</h5>
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Дата</th>
+                <th class="text-right">Кол-во токенов</th>
+                <th class="text-right">Примечание</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(action, index) in issueActions" :key="index">
+              <td class="text-left">{{ (action.time).toDateString() }}</td>
+              <td class="text-right">{{action.quantity}}</td>
+              <td class="text-right">{{action.memo}}</td>
+            </tr>
+            </tbody>
+          </q-markup-table>
+
+        </div>
+        
       </div>      
 
     </div>
@@ -125,9 +147,6 @@
   export default {
     data() {
       return {
-        issueActions : [],
-        issueQty: 0,
-        issueMemo: "" ,
         buyOMDialog: false,
         buyTokenInput: 10,
         comingSoon: false       
@@ -156,7 +175,7 @@
       }
     },
     computed: {
-      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance'])
+      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions'])
     }
   }
 </script>

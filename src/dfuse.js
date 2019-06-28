@@ -40,7 +40,7 @@ async function getIssueActions(contract, callback) {
       if (trx.execution_trace && trx.execution_trace.action_traces && trx.execution_trace.action_traces.length > 0) {
         const trace = trx.execution_trace.action_traces[0]
         const {to, quantity, memo} = trace.act.data
-        issueActions.push({to: to, quantity: quantity, memo: memo})
+        issueActions.push({to: to, quantity: quantity, memo: memo, time: new Date(trx.execution_trace.block_time)})
       }
     }
     console.log("found ", issueActions.length, " actions")

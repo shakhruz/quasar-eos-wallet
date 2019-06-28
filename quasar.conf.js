@@ -52,7 +52,8 @@ module.exports = function (ctx) {
         'QTimeline',
         'QTimelineEntry',
         'QDialog',
-        'QInput'                
+        'QInput',
+        'QMarkupTable'                
       ],
 
       directives: [

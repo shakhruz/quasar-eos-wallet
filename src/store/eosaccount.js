@@ -18,7 +18,8 @@ const state = {
       roiLastMonth: 0,
       roiTotal: 0,
       tokensOnSale: 0
-    }
+    },
+    issueActions: []
 }
 
 let eos = {}
@@ -46,6 +47,12 @@ const actions = {
                     dfuse.getBalance(network.tokenContract, state.account.name, (result) => {if (result) commit('updateBalance', {token: result})})
                     dfuse.getBalance(network.eosdtContract, state.account.name, (result) => {if (result) commit('updateBalance', {eosdt: result})})
                     dfuse.getBalance(network.tokenContract, network.presaleContract, (result) => {if (result) commit('updateBalance', {tokensOnSale: result})})
+                    dfuse.getIssueActions(network.tokenContract, (result) => {
+                        if (result) {
+                            console.log("got issue actions: ", result)
+                            commit('update', {issueActions: result})
+                        }
+                    })
                     return true
                     // this.getActions(this.account.name)
                     // dfuse.getIssueActions("blockcentrex", (issueActions) => {this.issueActions = issueActions})
@@ -77,6 +84,9 @@ const getters = {
     },
     balance: (state) => {
         return state.balance
+    },
+    issueActions: (state) => {
+        return state.issueActions
     },
     eos: (state) => {
         return eos
