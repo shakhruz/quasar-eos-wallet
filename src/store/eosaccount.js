@@ -1,0 +1,95 @@
+import scatter from '../scatter' 
+import dfuse from '../dfuse' 
+
+const network = scatter.network
+const rpc = scatter.rpc
+const Api = scatter.Api
+
+const state = {
+    loggedIn: false,
+    account: {},
+    balance: {
+      eos: 0,
+      token: 0,
+      share: 0,
+      eosdt: 0,
+      divsEosdt: 0,
+      divsEos: 0,
+      roiLastMonth: 0,
+      roiTotal: 0,
+      tokensOnSale: 0
+    }
+}
+
+let eos = {}
+
+const mutations = {
+    update(state, payload) {
+        console.log('update: ', payload)
+        Object.assign(state, payload)
+        console.log("new state: ", state)
+    },    
+    updateBalance(state, payload) {
+        Object.assign(state.balance, payload)    
+    }
+}
+
+const actions = {
+    login({ commit }) {
+        console.log("login")
+        scatter.ScatterJS.connect('EOSPM', {network}).then(connected => {
+            if(!connected) return console.error('no scatter')
+            const eos1 = scatter.ScatterJS.eos(network, Api, {rpc, beta3:true})
+            eos = eos1
+            scatter.ScatterJS.login().then(id => {
+                if(!id) return console.error('no identity')
+                else {
+                    commit('update', {account: scatter.ScatterJS.account('eos'), loggedIn: true})
+                    dfuse.getBalance(network.eosContract, state.account.name, (result) => {if (result) commit('updateBalance', {eos: result})})
+                    dfuse.getBalance(network.tokenContract, state.account.name, (result) => {if (result) commit('updateBalance', {token: result})})
+                    dfuse.getBalance(network.eosdtContract, state.account.name, (result) => {if (result) commit('updateBalance', {eosdt: result})})
+                    dfuse.getBalance(network.tokenContract, network.presaleContract, (result) => {if (result) commit('updateBalance', {tokensOnSale: result})})
+                    return true
+                    // this.getActions(this.account.name)
+                    // dfuse.getIssueActions("blockcentrex", (issueActions) => {this.issueActions = issueActions})
+                }
+            })
+        })
+    },
+    logout({ commit }) {
+        scatter.ScatterJS.logout().then(result => {
+            if(!result) return console.error('failed to logout')
+            commit('update', {account: null, loggedIn: false})
+            commit('updateBalance', {eos: 0, token: 0, eosdt: 0})
+            dfuse.clearUserStreams()
+            return true
+        })    
+    },
+    transferToPresale({ commit }, qty) {
+        console.log("transfer to presale: ", qty + '.0000 EOSDT')
+        scatter.transfer(eos, state.account, network.presaleContract, qty+ '.0000 EOSDT', 'purchase OMUSD on Presale')
+    }
+}
+
+const getters = {
+    loggedIn: (state) => {
+        return state.loggedIn
+    },
+    account: (state) => {
+        return state.account
+    },
+    balance: (state) => {
+        return state.balance
+    },
+    eos: (state) => {
+        return eos
+    }
+}
+
+export default {
+    namespaced: true,
+    state,
+    mutations,
+    actions,
+    getters
+}
