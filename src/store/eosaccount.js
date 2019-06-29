@@ -19,6 +19,7 @@ const state = {
       roiTotal: 0,
       tokensOnSale: 0
     },
+    tokenSupply: 0,
     issueActions: []
 }
 
@@ -47,6 +48,7 @@ const actions = {
                     dfuse.getBalance(network.tokenContract, state.account.name, (result) => {if (result) commit('updateBalance', {token: result})})
                     dfuse.getBalance(network.eosdtContract, state.account.name, (result) => {if (result) commit('updateBalance', {eosdt: result})})
                     dfuse.getBalance(network.tokenContract, network.presaleContract, (result) => {if (result) commit('updateBalance', {tokensOnSale: result})})
+                    dfuse.getTokenSupply(network.tokenContract, network.tokenName, (result) => {if (result) commit('update', {tokenSupply: result})})
                     dfuse.getIssueActions(network.tokenContract, (result) => {
                         if (result) {
                             console.log("got issue actions: ", result)
@@ -84,6 +86,9 @@ const getters = {
     },
     balance: (state) => {
         return state.balance
+    },
+    tokenSupply: (state) => {
+        return state.tokenSupply
     },
     issueActions: (state) => {
         return state.issueActions

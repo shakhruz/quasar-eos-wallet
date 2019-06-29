@@ -12,6 +12,7 @@ ScatterJS.plugins( new ScatterEOS() )
 //     protocol:'https',
 //     eosContract: "eosio.token",
 //     tokenContract: "blockcentrex",
+//     tokenName: "OMUSD",
 //     profitsContract: "omsudprofits",
 //     eosdtContract: "eosdttokenxx"
 // })
@@ -24,6 +25,7 @@ const network = ScatterJS.Network.fromJson({
     protocol:'https',
     eosContract: "eosio.token",
     tokenContract: "omusdledger1",
+    tokenName: "OMUSD",
     profitsContract: "omsudprofits",
     eosdtContract: "eosdttoken11",
     presaleContract: "omusdpresale"

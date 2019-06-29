@@ -7,7 +7,7 @@
             <div class="text-h4 text-center q-pb-sm">{{ balance.token }} USD</div>
             <div class="text-subtitle2 text-center">Вложено в проект</div>
             <q-card-section>
-              {{ balance.share }}% от общего капитала
+              {{ (balance.token / tokenSupply * 100).toFixed(2) }}% от общего капитала {{ tokenSupply }}
             </q-card-section>            
             <q-separator dark/>
             <q-card-actions vertical>
@@ -175,7 +175,7 @@
       }
     },
     computed: {
-      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions'])
+      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply'])
     }
   }
 </script>

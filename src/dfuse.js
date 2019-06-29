@@ -76,7 +76,7 @@ async function getBalance(contract, username, callback) {
       if (message.type == "table_delta"
         && message.data
         && message.data.dbop
-        && message.data.dbop.account == "eosio.token"
+        && message.data.dbop.account == contract
         && message.data.dbop.new
         && message.data.dbop.new.json
         && message.data.dbop.new.json.balance) {
@@ -84,6 +84,40 @@ async function getBalance(contract, username, callback) {
           const balanceValue = utils.parseAsset(balance)
           console.log("new balance: ", balance, " - ", balanceValue, "fo user: ", username)
           callback(balanceValue)
+        }
+    }).catch((error) => {
+      console.log("An error occurred.", error)
+    })
+
+    userStreams.push(stream)
+}
+
+async function getTokenSupply(contract, tokenName, callback) {
+  console.log("get ", contract, " token supply ")
+  const resp = await client.stateTable(contract, tokenName, "stat")
+  if (resp && resp.rows && resp.rows.length>0) {
+    const { supply } = resp.rows[0].json
+    const supplyValue = utils.parseAsset(supply)
+    console.log("token supply: ", supply, " - ", supplyValue)
+    callback(supplyValue)
+  } else {
+    console.log("there is no supply in ", contract, " yet, set to 0")
+    callback(0)
+  }
+
+  const stream = await client.streamTableRows({ code: contract, scope: tokenName, table: "stat"}, (message) => {
+      console.log("new token supply update", message)
+      if (message.type == "table_delta"
+        && message.data
+        && message.data.dbop
+        && message.data.dbop.account == contract
+        && message.data.dbop.new
+        && message.data.dbop.new.json
+        && message.data.dbop.new.json.supply) {
+          const { supply } = message.data.dbop.new.json
+          const supplyValue = utils.parseAsset(supply)
+          console.log("new supplyValue: ", supply, " - ", supplyValue)
+          callback(supplyValue)
         }
     }).catch((error) => {
       console.log("An error occurred.", error)
@@ -105,5 +139,6 @@ export default {
     getBalance,
     getActions,
     clearUserStreams,
-    getIssueActions
+    getIssueActions,
+    getTokenSupply
 }
