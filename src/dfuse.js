@@ -47,14 +47,15 @@ async function getIssueActions(contract, callback) {
     callback(issueActions)
   }
 
-  client.streamActionTraces({ accounts: contract, action_names: "issue" }, (message) => {
-      if (message.type === InboundMessageType.ACTION_TRACE) {
-        const { to, quantity, memo } = message.data.trace.act.data
-        console.log(`Issue [${to}, ${quantity}] (${memo})`)
-      }
-    }).catch((error) => {
-      console.log("An error occurred.", error)
-    })
+  // TODO : update issue actions
+  // client.streamActionTraces({ accounts: contract, action_names: "issue" }, (message) => {
+  //     if (message.type === InboundMessageType.ACTION_TRACE) {
+  //       const { to, quantity, memo } = message.data.trace.act.data
+  //       console.log(`Issue [${to}, ${quantity}] (${memo})`)
+  //     }
+  //   }).catch((error) => {
+  //     console.log("An error occurred.", error)
+  //   })
 }
 
 async function getBalance(contract, username, callback) {
@@ -126,6 +127,39 @@ async function getTokenSupply(contract, tokenName, callback) {
     userStreams.push(stream)
 }
 
+async function getDividendsActions(profitContract, username, callback) {
+  const opts = { limit: 10, sort: "desc" }
+  const resp = await client.searchTransactions(`auth:${profitContract} action:transfer receiver:${username}` , opts)
+
+  console.log(`Transfer actions from ${profitContract}`, resp)
+
+  if (resp.transactions && resp.transactions.length > 0) {
+    let actions = []
+    let total = 0
+    for(var i=0; i < resp.transactions.length; i++) {
+      const trx = resp.transactions[i].lifecycle
+      if (trx.execution_trace && trx.execution_trace.action_traces && trx.execution_trace.action_traces.length > 0) {
+        const trace = trx.execution_trace.action_traces[0]
+        const {to, quantity, memo} = trace.act.data
+        actions.push({to: to, quantity: quantity, memo: memo, time: new Date(trx.execution_trace.block_time)})
+        total += utils.parseAsset(quantity)
+      }
+    }
+    console.log("found ", actions.length, " actions ", " total: ", total)
+    callback(actions, total)
+  }
+
+  // TODO : update issue actions
+  // client.streamActionTraces({ accounts: contract, action_names: "issue" }, (message) => {
+  //     if (message.type === InboundMessageType.ACTION_TRACE) {
+  //       const { to, quantity, memo } = message.data.trace.act.data
+  //       console.log(`Issue [${to}, ${quantity}] (${memo})`)
+  //     }
+  //   }).catch((error) => {
+  //     console.log("An error occurred.", error)
+  //   })
+}
+
 // Close all user streams
 function clearUserStreams() {
   console.log("clear ", userStreams.length, " streams")
@@ -140,5 +174,6 @@ export default {
     getActions,
     clearUserStreams,
     getIssueActions,
-    getTokenSupply
+    getTokenSupply,
+    getDividendsActions
 }

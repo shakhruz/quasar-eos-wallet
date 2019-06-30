@@ -7,7 +7,7 @@
             <div class="text-h4 text-center q-pb-sm">{{ balance.token }} USD</div>
             <div class="text-subtitle2 text-center">Вложено в проект</div>
             <q-card-section>
-              {{ (balance.token / tokenSupply * 100).toFixed(2) }}% от общего капитала {{ tokenSupply }}
+              {{ tokenShare }}% от общего капитала {{ tokenSupply }}
             </q-card-section>            
             <q-separator dark/>
             <q-card-actions vertical>
@@ -100,6 +100,26 @@
         </q-timeline>
 
         <div>
+          <h5>Получены дивиденды:</h5>
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Дата</th>
+                <th class="text-right">Кол-во токенов</th>
+                <th class="text-right">Примечание</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(action, index) in dividendsActions" :key="index">
+              <td class="text-left">{{ (action.time).toDateString() }}</td>
+              <td class="text-right">{{action.quantity}}</td>
+              <td class="text-right">{{action.memo}}</td>
+            </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
+
+        <div>
           <h5>Выпуск токенов:</h5>
           <q-markup-table>
             <thead>
@@ -119,7 +139,6 @@
           </q-markup-table>
 
         </div>
-        
       </div>      
 
     </div>
@@ -175,7 +194,10 @@
       }
     },
     computed: {
-      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply'])
+      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply', 'dividendsActions']),
+      tokenShare() {
+        return (this.balance.token / this.tokenSupply * 100).toFixed(2)
+      }
     }
   }
 </script>

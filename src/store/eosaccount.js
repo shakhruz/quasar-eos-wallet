@@ -20,7 +20,8 @@ const state = {
       tokensOnSale: 0
     },
     tokenSupply: 0,
-    issueActions: []
+    issueActions: [],
+    dividendsActions: []
 }
 
 let eos = {}
@@ -55,6 +56,14 @@ const actions = {
                             commit('update', {issueActions: result})
                         }
                     })
+                    dfuse.getDividendsActions(network.profitsContract, state.account.name, (actions, total) => {
+                        if (actions) {
+                            console.log("got dividends actions: ", actions)
+                            commit('update', {dividendsActions: actions})
+                            commit('updateBalance', {divsEosdt: total})
+                        }
+                    })
+
                     return true
                     // this.getActions(this.account.name)
                     // dfuse.getIssueActions("blockcentrex", (issueActions) => {this.issueActions = issueActions})
@@ -92,6 +101,9 @@ const getters = {
     },
     issueActions: (state) => {
         return state.issueActions
+    },
+    dividendsActions: (state) => {
+        return state.dividendsActions
     },
     eos: (state) => {
         return eos

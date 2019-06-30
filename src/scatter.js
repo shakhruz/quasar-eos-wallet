@@ -26,7 +26,7 @@ const network = ScatterJS.Network.fromJson({
     eosContract: "eosio.token",
     tokenContract: "omusdledger1",
     tokenName: "OMUSD",
-    profitsContract: "omsudprofits",
+    profitsContract: "omusdprofits",
     eosdtContract: "eosdttoken11",
     presaleContract: "omusdpresale"
 })
