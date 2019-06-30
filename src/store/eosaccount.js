@@ -84,7 +84,7 @@ const actions = {
     },
     transferToPresale({ commit }, qty) {
         console.log("transfer to presale: ", qty + '.0000 EOSDT')
-        scatter.transfer(eos, state.account, network.presaleContract, qty+ '.0000 EOSDT', 'purchase OMUSD on Presale')
+        scatter.transfer(eos, network.eosdtContract, state.account, network.presaleContract, qty+ '.0000 EOSDT', 'purchase OMUSD on Presale')
     }
 }
 

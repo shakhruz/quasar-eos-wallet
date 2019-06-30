@@ -34,12 +34,12 @@ const network = ScatterJS.Network.fromJson({
 
 const rpc = new JsonRpc(network.fullhost())
 
-function transfer(eos, account, to, qty, memo) {
+function transfer(eos, tokenContract, account, to, qty, memo) {
     if (eos) {
         console.log("eos: ", eos)
         eos.transact({
             actions: [{
-                account: 'eosio.token',
+                account: tokenContract,
                 name: 'transfer',
                 authorization: [{
                     actor: account.name,
