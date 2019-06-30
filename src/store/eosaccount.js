@@ -22,7 +22,8 @@ const state = {
     },
     tokenSupply: 0,
     issueActions: [],
-    dividendsActions: []
+    dividendsActions: [],
+    presaleActions: []
 }
 
 let eos = {}
@@ -62,6 +63,12 @@ const actions = {
                             console.log("got dividends actions: ", actions)
                             commit('update', {dividendsActions: actions})
                             commit('updateBalance', {divsEosdt: total})
+                        }
+                    })
+                    dfuse.getPresaleActions(network.presaleContract, state.account.name, (actions) => {
+                        if (actions) {
+                            console.log("got presale actions: ", actions)
+                            commit('update', {presaleActions: actions})
                         }
                     })
                     dfuse.getBalance(network.eosdtContract, network.profitsContract, (result) => {if (result) commit('updateBalance', {currentProfits: result})})
@@ -106,6 +113,9 @@ const getters = {
     },
     dividendsActions: (state) => {
         return state.dividendsActions
+    },
+    presaleActions: (state) => {
+        return state.presaleActions
     },
     eos: (state) => {
         return eos

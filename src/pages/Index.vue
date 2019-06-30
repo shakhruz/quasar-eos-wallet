@@ -113,6 +113,26 @@
         </div>
 
         <div>
+          <h5>Куплены токены:</h5>
+          <q-markup-table>
+            <thead>
+              <tr>
+                <th class="text-left">Дата</th>
+                <th class="text-right">Кол-во токенов</th>
+                <th class="text-right">Примечание</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(action, index) in presaleActions" :key="index">
+              <td class="text-left">{{ (action.time).toDateString() }}</td>
+              <td class="text-right">{{action.quantity}}</td>
+              <td class="text-right">{{action.memo}}</td>
+            </tr>
+            </tbody>
+          </q-markup-table>
+        </div>
+
+        <div>
           <h5>Выпуск токенов:</h5>
           <q-markup-table>
             <thead>
@@ -187,7 +207,7 @@
       }
     },
     computed: {
-      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply', 'dividendsActions']),
+      ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply', 'dividendsActions', 'presaleActions']),
       tokenShare() {
         return (this.balance.token / this.tokenSupply * 100).toFixed(2)
       },
