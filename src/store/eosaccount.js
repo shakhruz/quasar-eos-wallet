@@ -17,7 +17,8 @@ const state = {
       divsEos: 0,
       roiLastMonth: 0,
       roiTotal: 0,
-      tokensOnSale: 0
+      tokensOnSale: 0,
+      currentProfits: 0
     },
     tokenSupply: 0,
     issueActions: [],
@@ -63,6 +64,7 @@ const actions = {
                             commit('updateBalance', {divsEosdt: total})
                         }
                     })
+                    dfuse.getBalance(network.eosdtContract, network.profitsContract, (result) => {if (result) commit('updateBalance', {currentProfits: result})})
 
                     return true
                     // this.getActions(this.account.name)

@@ -12,7 +12,6 @@
             <q-separator dark/>
             <q-card-actions vertical>
               <q-btn icon="get_app" flat label="Купить долю" @click="buyOMDialog = true" />
-              <!-- <q-btn icon="list" flat label="История покупок" @click="comingSoon = true"/> -->
             </q-card-actions>            
           </q-card-section>
         </q-card>
@@ -21,13 +20,10 @@
             <div class="text-h4 text-center q-pb-sm">{{ balance.divsEosdt }} USD</div>
             <div class="text-subtitle2 text-center">Выплачено дивидендов</div>
             <q-card-section>
-              {{ balance.roiLastMonth }}% за прошлый месяц<br/>
-              {{ balance.roiTotal }}% за весь период
+              {{ balance.currentProfits }} USD всего дивидендов<br/>
+              {{ currentDivs }} USD к выплате
             </q-card-section>            
             <q-separator dark/>
-            <!-- <q-card-actions vertical>
-              <q-btn flat icon="list" label="История Выплат" @click="comingSoon = true" />
-            </q-card-actions>             -->
           </q-card-section>
         </q-card>      
         <q-card class="my-card bg-secondary q-pa-sm text-white col-md-3 col-xs-12">
@@ -38,9 +34,6 @@
               В наличии на счету в ликвидных активах
             </q-card-section>            
             <q-separator dark />
-            <!-- <q-card-actions vertical>
-              <q-btn flat icon="list" label="История" @click="comingSoon = true" />
-            </q-card-actions>             -->
           </q-card-section>
         </q-card>      
       </div>
@@ -197,6 +190,9 @@
       ...mapGetters('eosaccount', ['loggedIn', 'account', 'balance', 'issueActions', 'tokenSupply', 'dividendsActions']),
       tokenShare() {
         return (this.balance.token / this.tokenSupply * 100).toFixed(2)
+      },
+      currentDivs() {
+        return (this.balance.currentProfits * this.tokenShare / 100).toFixed(2)
       }
     }
   }
