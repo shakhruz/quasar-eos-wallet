@@ -42,7 +42,11 @@ const actions = {
     login({ commit }) {
         scatter.ScatterJS.connect('ProjectX', {network}).then(connected => {
             if(!connected) {
-                Notify.create('Не могу соединиться со Scatter. Пожалуйста убедитесь что он запущен или скачайте его с http://Get-Scatter.com')
+                Notify.create({
+                    message: 'Не могу соединиться со Scatter. Пожалуйста убедитесь что он запущен или скачайте его с http://Get-Scatter.com',
+                    color: 'negative',
+                    position: 'top'
+                })
                 return console.error('no scatter')
             }
             const eos1 = scatter.ScatterJS.eos(network, Api, {rpc, beta3:true})

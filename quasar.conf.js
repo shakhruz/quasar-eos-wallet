@@ -64,7 +64,12 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify'
-      ]
+      ],
+
+      config: {
+        notify: {
+        }
+      }
 
       // iconSet: 'ionicons-v4'
       // lang: 'de' // Quasar language
