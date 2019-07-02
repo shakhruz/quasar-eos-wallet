@@ -1,5 +1,6 @@
 import scatter from '../scatter' 
 import dfuse from '../dfuse' 
+import { Notify } from 'quasar'
 
 const network = scatter.network
 const rpc = scatter.rpc
@@ -40,7 +41,10 @@ const mutations = {
 const actions = {
     login({ commit }) {
         scatter.ScatterJS.connect('ProjectX', {network}).then(connected => {
-            if(!connected) return console.error('no scatter')
+            if(!connected) {
+                Notify.create('Не могу соединиться со Scatter. Пожалуйста убедитесь что он запущен или скачайте его с http://Get-Scatter.com')
+                return console.error('no scatter')
+            }
             const eos1 = scatter.ScatterJS.eos(network, Api, {rpc, beta3:true})
             eos = eos1
             scatter.ScatterJS.login().then(id => {
